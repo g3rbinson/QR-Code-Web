@@ -40,6 +40,12 @@
     img.style.display = 'none';
     img.src = '';
     disableDownload();
+    document.getElementById('outputCard').style.display = 'none';
+  }
+
+  function showOutput() {
+    document.getElementById('outputCard').style.display = 'block';
+    img.style.display = 'block';
   }
 
   clearBtn.addEventListener('click', () => {
@@ -121,7 +127,7 @@
     
     if (transparentBg) {
       makeTransparent(qrUrl, '#' + bgColor, '#' + qrColor, size, (transparentUrl) => {
-        img.style.display = 'block';
+        showOutput();
         img.width = size;
         img.height = size;
         img.src = transparentUrl;
@@ -129,10 +135,10 @@
         errorMsg.textContent = '';
       });
     } else {
-      img.style.display = 'block';
       img.width = size;
       img.height = size;
       img.onload = () => {
+        showOutput();
         enableDownload(qrUrl);
         errorMsg.textContent = '';
       };

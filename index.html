@@ -1,53 +1,86 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="h-100">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>QR Code Generator</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link rel="stylesheet" href="assets/style.css" />
     <script src="assets/script.js" defer></script>
   </head>
-  <body>
-    <main class="container">
-      <h1>QR Code Generator</h1>
+  <body class="d-flex flex-column h-100 bg-dark text-light">
+    <main class="flex-shrink-0">
+      <div class="container py-5">
+        <div class="row justify-content-center">
+          <div class="col-lg-8 col-xl-7">
+            <h1 class="text-center mb-4 display-5 fw-bold">QR Code Generator</h1>
+            <p class="text-center mb-4">Create custom QR codes instantly</p>
 
-      <form id="qrForm" class="controls" novalidate>
-        <label for="urlInput">URL</label>
-        <input id="urlInput" name="url" type="text" placeholder="example.com or https://example.com" required />
+            <div class="card bg-secondary border-0 shadow-lg">
+              <div class="card-body p-4">
+                <form id="qrForm" novalidate>
+                  <div class="mb-3">
+                    <label for="urlInput" class="form-label">URL</label>
+                    <input id="urlInput" name="url" type="text" class="form-control form-control-lg" placeholder="example.com or https://example.com" required />
+                  </div>
 
-        <div class="row">
-          <label for="sizeSelect">Size</label>
-          <select id="sizeSelect" name="size">
-            <option value="128">Small</option>
-            <option value="256" selected>Medium</option>
-            <option value="512">Large</option>
-          </select>
-        </div>
+                  <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                      <label for="sizeSelect" class="form-label">Size</label>
+                      <select id="sizeSelect" name="size" class="form-select">
+                        <option value="128">Small</option>
+                        <option value="256" selected>Medium</option>
+                        <option value="512">Large</option>
+                      </select>
+                    </div>
 
-        <div class="color-row">
-          <div>
-            <label for="qrColor">QR Color</label>
-            <input id="qrColor" name="qrColor" type="color" value="#000000" />
+                    <div class="col-md-6">
+                      <label for="qrColor" class="form-label">QR Color</label>
+                      <input id="qrColor" name="qrColor" type="color" class="form-control form-control-color w-100" value="#000000" />
+                    </div>
+                  </div>
+
+                  <div class="mb-3">
+                    <div class="form-check">
+                      <input id="transparentBg" name="transparentBg" type="checkbox" class="form-check-input" />
+                      <label class="form-check-label" for="transparentBg">
+                        Transparent Background <small>(Download to view)</small>
+                      </label>
+                    </div>
+                  </div>
+
+                  <button type="submit" class="btn btn-primary btn-lg w-100 mb-2">Generate QR Code</button>
+                  <p id="errorMsg" class="text-warning small mb-0" aria-live="polite"></p>
+                </form>
+              </div>
+            </div>
+
+            <div class="card bg-secondary border-0 shadow-lg mt-4" id="outputCard" style="display:none;">
+              <div class="card-body p-4 text-center">
+                <img id="qrImg" alt="QR code image" class="img-fluid rounded mb-3" style="display:none; background:white;" />
+                <div class="d-flex gap-2 justify-content-center">
+                  <a id="downloadBtn" class="btn btn-success" href="#" download="qr-code.png" disabled>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download me-1" viewBox="0 0 16 16">
+                      <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5"/>
+                      <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708z"/>
+                    </svg>
+                    Download PNG
+                  </a>
+                  <button id="clearBtn" class="btn btn-outline-light" type="button">Clear</button>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="transparent-check">
-            <label for="transparentBg">Transparent Background</br> (Download to view)</label>
-            <input id="transparentBg" name="transparentBg" type="checkbox" />
-          </div>
         </div>
-
-        <button type="submit" class="primary">Generate QR Code</button>
-        <p id="errorMsg" class="error" aria-live="polite"></p>
-      </form>
-
-      <section class="output">
-        <img id="qrImg" alt="QR code image" style="display:none; background:white; border-radius:8px;" />
-        <div class="actions">
-          <a id="downloadBtn" class="secondary" href="#" download="qr-code.png" disabled>Download PNG</a>
-          <button id="clearBtn" class="secondary" type="button">Clear</button>
-        </div>
-      </section>
+      </div>
     </main>
 
-    <footer class="footer">No data is uploaded; everything runs in your browser.</footer>
+    <footer class="footer mt-auto py-3 bg-body-tertiary">
+      <div class="container text-center">
+        <span class="text-white">🔒 No data is uploaded; everything runs in your browser.</span>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
   </body>
 </html>
