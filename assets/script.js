@@ -8,41 +8,6 @@
   const downloadBtn = document.getElementById('downloadBtn');
   const clearBtn = document.getElementById('clearBtn');
 
-  // Attempt to load the QR code library from multiple CDNs
-  async function ensureQrLibLoaded() {
-    if (window.QRCode && typeof window.QRCode.toCanvas === 'function') return true;
-
-    const sources = [
-      // Prefer local vendor copy if present
-      '/assets/vendor/qrcode.min.js',
-      'assets/vendor/qrcode.min.js',
-      // CDNs as fallback
-      'https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js',
-      'https://unpkg.com/qrcode@1.5.3/build/qrcode.min.js',
-    ];
-
-    for (const src of sources) {
-      try {
-        await loadScript(src);
-        if (window.QRCode && typeof window.QRCode.toCanvas === 'function') return true;
-      } catch (_) {
-        // try next source
-      }
-    }
-    return false;
-  }
-
-  function loadScript(src) {
-    return new Promise((resolve, reject) => {
-      const s = document.createElement('script');
-      s.src = src;
-      s.async = true;
-      s.onload = () => resolve();
-      s.onerror = () => reject(new Error('Failed to load ' + src));
-      document.head.appendChild(s);
-    });
-  }
-
   function isValidUrl(value) {
     try {
       const u = new URL(value);
@@ -101,45 +66,20 @@
       return;
     }
 
-    // Make sure QR library is available
-    const libReady = await ensureQrLibLoaded();
-    if (libReady) {
-      try {
-        setCanvasSize(size);
-        await QRCode.toCanvas(canvas, value, {
-          width: size,
-          margin: 2,
-          color: { dark: '#000000', light: '#ffffff' },
-          errorCorrectionLevel: 'M',
-        });
-        enableDownload();
-        return;
-      } catch (err) {
-        console.error(err);
-        // fall through to image-based generation
-      }
-    }
-
-    // Fallback: use Google Chart API to render QR as an image
+    // Use the embedded QRGenerator library
     try {
-      const apiUrl = new URL('https://chart.googleapis.com/chart');
-      apiUrl.searchParams.set('cht', 'qr');
-      apiUrl.searchParams.set('chs', `${size}x${size}`);
-      apiUrl.searchParams.set('chld', 'M|0');
-      apiUrl.searchParams.set('chl', value);
+      if (typeof QRGenerator === 'undefined') {
+        throw new Error('QR generator not loaded');
+      }
 
-      img.style.display = 'block';
-      setCanvasSize(size);
-      img.onload = () => {
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0, size, size);
-        enableDownload();
-      };
-      img.onerror = () => {
-        errorMsg.textContent = 'Failed to generate the QR code.';
-        disableDownload();
-      };
-      img.src = apiUrl.toString();
+      QRGenerator.toCanvas(canvas, value, {
+        size: size,
+        margin: 4,
+        dark: '#000000',
+        light: '#ffffff'
+      });
+      
+      enableDownload();
     } catch (err) {
       console.error(err);
       errorMsg.textContent = 'Failed to generate the QR code.';
