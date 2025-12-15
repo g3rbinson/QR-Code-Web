@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>QR Code Generator</title>
+    <link rel="stylesheet" href="assets/style.css" />
+    <!-- App script handles loading the QR library dynamically with fallbacks -->
+    <script src="assets/script.js" defer></script>
+  </head>
+  <body>
+    <main class="container">
+      <h1>QR Code Generator</h1>
+
+      <form id="qrForm" class="controls" novalidate>
+        <label for="urlInput">URL</label>
+        <input id="urlInput" name="url" type="url" placeholder="https://example.com" required />
+
+        <div class="row">
+          <label for="sizeSelect">Size</label>
+          <select id="sizeSelect" name="size">
+            <option value="128">128 px</option>
+            <option value="256" selected>256 px</option>
+            <option value="512">512 px</option>
+          </select>
+        </div>
+
+        <button type="submit" class="primary">Generate QR Code</button>
+        <p id="errorMsg" class="error" aria-live="polite"></p>
+      </form>
+
+      <section class="output">
+        <canvas id="qrCanvas" width="256" height="256" aria-label="QR code output"></canvas>
+        <img id="qrImg" alt="QR code image" style="display:none" />
+        <div class="actions">
+          <a id="downloadBtn" class="secondary" href="#" download="qr-code.png" disabled>Download PNG</a>
+          <button id="clearBtn" class="secondary" type="button">Clear</button>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">No data is uploaded; everything runs in your browser.</footer>
+  </body>
+</html>
