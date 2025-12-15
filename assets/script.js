@@ -16,9 +16,19 @@
     }
   }
 
-  function enableDownload(url) {
-    downloadBtn.href = url;
-    downloadBtn.removeAttribute('disabled');
+  async function enableDownload(url) {
+    try {
+      // Fetch the image and create a blob URL for proper downloading
+      const response = await fetch(url);
+      const blob = await response.blob();
+      const blobUrl = URL.createObjectURL(blob);
+      downloadBtn.href = blobUrl;
+      downloadBtn.removeAttribute('disabled');
+    } catch (err) {
+      // Fallback to direct URL if fetch fails
+      downloadBtn.href = url;
+      downloadBtn.removeAttribute('disabled');
+    }
   }
 
   function disableDownload() {
