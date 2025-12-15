@@ -24,6 +24,17 @@
           </select>
         </div>
 
+        <div class="color-row">
+          <div>
+            <label for="qrColor">QR Color</label>
+            <input id="qrColor" name="qrColor" type="color" value="#000000" />
+          </div>
+          <div class="transparent-check">
+            <label for="transparentBg">Transparent BG</label>
+            <input id="transparentBg" name="transparentBg" type="checkbox" />
+          </div>
+        </div>
+
         <button type="submit" class="primary">Generate QR Code</button>
         <p id="errorMsg" class="error" aria-live="polite"></p>
       </form>

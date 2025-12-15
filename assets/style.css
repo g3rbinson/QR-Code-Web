@@ -8,7 +8,13 @@ h1 { margin: 0 0 16px; font-size: 28px; }
 .controls { display: grid; gap: 12px; background: #111827; padding: 16px; border-radius: 12px; border: 1px solid #1f2937; }
 .controls label { font-weight: 600; }
 .controls input, .controls select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #334155; background: #0b1220; color: #e2e8f0; }
+.controls input[type="color"] { padding: 4px; height: 40px; cursor: pointer; }
+.controls input[type="checkbox"] { width: auto; cursor: pointer; }
 .controls .row { display: grid; grid-template-columns: 100px 1fr; gap: 8px; align-items: center; }
+.controls .color-row { display: flex; gap: 16px; align-items: end; }
+.controls .color-row > div { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+.controls .transparent-check { display: flex; flex-direction: row; align-items: center; gap: 8px; }
+.controls .transparent-check label { font-weight: 600; }
 
 button.primary { background: #2563eb; color: white; border: none; padding: 10px 14px; border-radius: 8px; cursor: pointer; }
 button.primary:hover { background: #1d4ed8; }
