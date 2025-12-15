@@ -104,6 +104,7 @@
     const qrColor = document.getElementById('qrColor').value.replace('#', '');
     const bgColor = 'ffffff'; // Always white background
     const transparentBg = document.getElementById('transparentBg').checked;
+    const includeWww = document.getElementById('includeWww').checked;
 
     if (!value) {
       errorMsg.textContent = 'Please enter a URL.';
@@ -113,7 +114,11 @@
 
     // Auto-add https:// if no protocol is present
     if (!value.match(/^[a-zA-Z][a-zA-Z\d+\-.]*:/)) {
-      value = 'https://' + value;
+      if (includeWww && !value.startsWith('www.')) {
+        value = 'https://www.' + value;
+      } else {
+        value = 'https://' + value;
+      }
     }
 
     if (!isValidUrl(value)) {
