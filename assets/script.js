@@ -42,13 +42,18 @@
     e.preventDefault();
     errorMsg.textContent = '';
 
-    const value = urlInput.value.trim();
+    let value = urlInput.value.trim();
     const size = parseInt(sizeSelect.value, 10) || 256;
 
     if (!value) {
       errorMsg.textContent = 'Please enter a URL.';
       disableDownload();
       return;
+    }
+
+    // Auto-add https:// if no protocol is present
+    if (!value.match(/^[a-zA-Z][a-zA-Z\d+\-.]*:/)) {
+      value = 'https://' + value;
     }
 
     if (!isValidUrl(value)) {
