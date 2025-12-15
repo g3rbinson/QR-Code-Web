@@ -3,7 +3,6 @@
   const urlInput = document.getElementById('urlInput');
   const sizeSelect = document.getElementById('sizeSelect');
   const errorMsg = document.getElementById('errorMsg');
-  const canvas = document.getElementById('qrCanvas');
   const img = document.getElementById('qrImg');
   const downloadBtn = document.getElementById('downloadBtn');
   const clearBtn = document.getElementById('clearBtn');
@@ -17,14 +16,8 @@
     }
   }
 
-  function setCanvasSize(size) {
-    canvas.width = size;
-    canvas.height = size;
-  }
-
-  function enableDownload() {
-    const dataUrl = canvas.toDataURL('image/png');
-    downloadBtn.href = dataUrl;
+  function enableDownload(url) {
+    downloadBtn.href = url;
     downloadBtn.removeAttribute('disabled');
   }
 
@@ -33,21 +26,19 @@
     downloadBtn.href = '#';
   }
 
-  function clearCanvas() {
-    const ctx = canvas.getContext('2d');
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    disableDownload();
+  function clearQR() {
     img.style.display = 'none';
     img.src = '';
+    disableDownload();
   }
 
   clearBtn.addEventListener('click', () => {
     errorMsg.textContent = '';
     urlInput.value = '';
-    clearCanvas();
+    clearQR();
   });
 
-  form.addEventListener('submit', async (e) => {
+  form.addEventListener('submit', (e) => {
     e.preventDefault();
     errorMsg.textContent = '';
 
@@ -66,24 +57,20 @@
       return;
     }
 
-    // Use the embedded QRGenerator library
-    try {
-      if (typeof QRGenerator === 'undefined') {
-        throw new Error('QR generator not loaded');
-      }
-
-      QRGenerator.toCanvas(canvas, value, {
-        size: size,
-        margin: 4,
-        dark: '#000000',
-        light: '#ffffff'
-      });
-      
-      enableDownload();
-    } catch (err) {
-      console.error(err);
-      errorMsg.textContent = 'Failed to generate the QR code.';
+    // Use QR Server API - simple and reliable
+    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent(value)}`;
+    
+    img.style.display = 'block';
+    img.width = size;
+    img.height = size;
+    img.onload = () => {
+      enableDownload(qrUrl);
+      errorMsg.textContent = '';
+    };
+    img.onerror = () => {
+      errorMsg.textContent = 'Failed to generate QR code. Check your internet connection.';
       disableDownload();
-    }
+    };
+    img.src = qrUrl;
   });
 })();
