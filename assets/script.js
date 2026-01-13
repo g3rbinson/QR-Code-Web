@@ -6,6 +6,9 @@
   const img = document.getElementById('qrImg');
   const downloadBtn = document.getElementById('downloadBtn');
   const clearBtn = document.getElementById('clearBtn');
+  const originalBodyPadding = window.getComputedStyle(document.body).paddingBottom || '60px';
+  const originalBodyPaddingValue = parseInt(originalBodyPadding, 10) || 60;
+  const extraPadding = 150; // extra margin beyond footer height to ensure scroll room
 
   function isValidUrl(value) {
     try {
@@ -40,12 +43,29 @@
     img.style.display = 'none';
     img.src = '';
     disableDownload();
-    document.getElementById('outputCard').style.display = 'none';
+    const outputCard = document.getElementById('outputCard');
+    outputCard.style.display = 'none';
+    outputCard.style.marginBottom = ''; // reset margin
+    // restore original body padding so layout returns to normal
+    document.body.style.paddingBottom = originalBodyPadding;
   }
 
   function showOutput() {
-    document.getElementById('outputCard').style.display = 'block';
+    const outputCard = document.getElementById('outputCard');
+    outputCard.style.display = 'block';
+    outputCard.style.marginBottom = '120px'; // add significant bottom margin to output card
     img.style.display = 'block';
+    // compute footer height and set padding so content sits above it
+    const footerEl = document.querySelector('.footer');
+    const footerHeight = footerEl ? footerEl.offsetHeight : 0;
+    document.body.style.paddingBottom = (originalBodyPaddingValue + footerHeight + extraPadding) + 'px';
+
+    // scroll the output into view and adjust by footer height so it's not covered
+    outputCard.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    // small delay to allow smooth scroll, then offset by footer height
+    setTimeout(() => {
+      window.scrollBy({ top: -(footerHeight + extraPadding), left: 0, behavior: 'smooth' });
+    }, 200);
   }
 
   clearBtn.addEventListener('click', () => {
